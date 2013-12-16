@@ -1,0 +1,38 @@
+{
+  "name": "dbjs-fragment",
+  "version": "0.0.0",
+  "description": "Observable dbjs database fragments",
+  "author": "Mariusz Nowak <medyk@medikoo.com> (http://www.medikoo.com/)",
+  "keywords": [
+    "database",
+    "dbjs",
+    "db",
+    "fragment",
+    "partial",
+    "replication",
+    "observable",
+    "sync",
+    "synchronisation"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/medikoo/dbjs-fragment.git"
+  },
+  "scripts": {
+    "test": "node ./node_modules/tad/bin/tad"
+  },
+  "dependencies": {
+    "d": "git://github.com/medikoo/d.git",
+    "dbjs": "git://github.com/medikoo/dbjs.git",
+    "es5-ext": "git://github.com/medikoo/d.git",
+    "event-emitter": "git://github.com/medikoo/event-emitter.git",
+    "memoizee": "git://github.com/medikoo/memoize.git",
+    "observable-multi-set": "git://github.com/medikoo/observable-multi-set.git",
+    "observable-set": "git://github.com/medikoo/observable-set.git"
+  },
+  "devDependencies": {
+    "es6-iterator": "git://github.com/medikoo/es6-iterator.git",
+    "tad": "~0.1.20"
+  },
+  "license": "MIT"
+}
