@@ -38,8 +38,8 @@ module.exports = {
 
 		a.deep(toArray(set).map(getId).sort(),
 			[obj11, obj11.$iteTestStr,
-				obj11.iteTestMulti.$get('raz'),
-				obj11.iteTestMulti.$get('dwa'),
+				obj11.iteTestMulti.$getOwn('raz'),
+				obj11.iteTestMulti.$getOwn('dwa'),
 				obj11.$otherObj, obj31, obj31.$iteRemtest,
 				obj21, obj21.$iteTest].map(getId).sort(), "Initial");
 
@@ -51,8 +51,8 @@ module.exports = {
 		deletes.length = 0;
 		a.deep(toArray(set).map(getId).sort(),
 			[obj11, obj11.$iteTestStr,
-				obj11.iteTestMulti.$get('raz'),
-				obj11.iteTestMulti.$get('dwa'),
+				obj11.iteTestMulti.$getOwn('raz'),
+				obj11.iteTestMulti.$getOwn('dwa'),
 				obj11.$otherObj,
 				obj21, obj21.$iteTest].map(getId).sort(), "Clear existing: Total");
 
@@ -64,25 +64,25 @@ module.exports = {
 		deletes.length = 0;
 		a.deep(toArray(set).map(getId).sort(),
 			[obj11, obj11.$iteTestStr,
-				obj11.iteTestMulti.$get('raz'),
-				obj11.iteTestMulti.$get('dwa'),
+				obj11.iteTestMulti.$getOwn('raz'),
+				obj11.iteTestMulti.$getOwn('dwa'),
 				obj11.$otherObj].map(getId).sort(), "Delete reverse: Total");
 
 		obj11.otherMultipleObj.add(obj31);
-		a.deep(updates.sort(), [obj11.otherMultipleObj.$get(obj31), obj31,
+		a.deep(updates.sort(), [obj11.otherMultipleObj.$getOwn(obj31), obj31,
 			obj31.$iteRemtest].map(getId).sort(), "Add obj item: Updates");
 		updates.length = 0;
 		a.deep(deletes, [], "Add obj item: Deletes");
 		deletes.length = 0;
 		a.deep(toArray(set).map(getId).sort(),
 			[obj11, obj11.$iteTestStr,
-				obj11.iteTestMulti.$get('raz'),
-				obj11.iteTestMulti.$get('dwa'),
-				obj11.$otherObj, obj11.otherMultipleObj.$get(obj31), obj31,
+				obj11.iteTestMulti.$getOwn('raz'),
+				obj11.iteTestMulti.$getOwn('dwa'),
+				obj11.$otherObj, obj11.otherMultipleObj.$getOwn(obj31), obj31,
 				obj31.$iteRemtest].map(getId).sort(), "Add obj item: Total");
 
 		obj11.otherMultipleObj.delete(obj31);
-		a.deep(updates, [obj11.otherMultipleObj.$get(obj31).__id__],
+		a.deep(updates, [obj11.otherMultipleObj.$getOwn(obj31).__id__],
 			"Delete obj item: Updates");
 		updates.length = 0;
 		a.deep(deletes.sort(), [obj31, obj31.$iteRemtest].map(getId).sort(),
@@ -90,22 +90,22 @@ module.exports = {
 		deletes.length = 0;
 		a.deep(toArray(set).map(getId).sort(),
 			[obj11, obj11.$iteTestStr,
-				obj11.iteTestMulti.$get('raz'),
-				obj11.iteTestMulti.$get('dwa'),
+				obj11.iteTestMulti.$getOwn('raz'),
+				obj11.iteTestMulti.$getOwn('dwa'),
 				obj11.$otherObj].map(getId).sort(),
 			"Delete obj item: Total");
 
 		obj32 = new Type3();
 		obj11.otherMultipleObj.delete(obj32);
-		a.deep(updates, [obj11.otherMultipleObj.$get(obj32).__id__],
+		a.deep(updates, [obj11.otherMultipleObj.$getOwn(obj32).__id__],
 			"Invoke delete item: Updates");
 		updates.length = 0;
 		a.deep(deletes, [], "Invoke delete item: Deletes");
 		deletes.length = 0;
 		a.deep(toArray(set).map(getId).sort(),
 			[obj11, obj11.$iteTestStr,
-				obj11.iteTestMulti.$get('raz'),
-				obj11.iteTestMulti.$get('dwa'),
+				obj11.iteTestMulti.$getOwn('raz'),
+				obj11.iteTestMulti.$getOwn('dwa'),
 				obj11.$otherObj].map(getId).sort(),
 			"Invoke delete item: Total");
 
@@ -136,8 +136,8 @@ module.exports = {
 
 		a.deep(toArray(set).map(getId).sort(),
 			[obj11, obj11.$iteTestStr,
-				obj11.iteTestMulti.$get('raz'),
-				obj11.iteTestMulti.$get('dwa'),
+				obj11.iteTestMulti.$getOwn('raz'),
+				obj11.iteTestMulti.$getOwn('dwa'),
 				obj11.$otherObj,
 				obj11.$first, obj21, obj21.$iteTest, obj21.$second, obj33,
 				obj33.$third, obj33.$foo, obj33.$fourth, obj41,
@@ -147,8 +147,8 @@ module.exports = {
 		set.sets.delete(frag);
 		a.deep(updates.sort(), [], "Circular: Update");
 		a.deep(deletes.sort(), [obj11, obj11.$iteTestStr,
-			obj11.iteTestMulti.$get('raz'),
-			obj11.iteTestMulti.$get('dwa'),
+			obj11.iteTestMulti.$getOwn('raz'),
+			obj11.iteTestMulti.$getOwn('dwa'),
 			obj11.$otherObj,
 			obj11.$first, obj21, obj21.$iteTest, obj21.$second, obj33,
 			obj33.$third, obj33.$foo, obj33.$fourth, obj41].map(getId).sort(),
@@ -187,8 +187,8 @@ module.exports = {
 		set.sets.add(frag11);
 		a.deep(updates.sort(),
 			[obj11, obj11.$iteTestStr,
-				obj11.iteTestMulti.$get('raz'),
-				obj11.iteTestMulti.$get('dwa'),
+				obj11.iteTestMulti.$getOwn('raz'),
+				obj11.iteTestMulti.$getOwn('dwa'),
 				obj11.$otherObj, obj31, obj31.$iteRemtest,
 				obj21, obj21.$iteTest].map(getId).sort(), "Updates");
 		updates.length = 0;
@@ -233,14 +233,14 @@ module.exports = {
 		deletes.length = 0;
 
 		obj11.otherMultipleObj.add(obj31);
-		a.deep(updates.sort(), [obj11.otherMultipleObj.$get(obj31), obj31,
+		a.deep(updates.sort(), [obj11.otherMultipleObj.$getOwn(obj31), obj31,
 			obj31.$iteRemtest].map(getId).sort(), "Add obj item: Updates");
 		updates.length = 0;
 		a.deep(deletes, [], "Add obj item: Deletes");
 		deletes.length = 0;
 
 		obj11.otherMultipleObj.delete(obj31);
-		a.deep(updates, [obj11.otherMultipleObj.$get(obj31).__id__],
+		a.deep(updates, [obj11.otherMultipleObj.$getOwn(obj31).__id__],
 			"Add obj item: Updates");
 		updates.length = 0;
 		a.deep(deletes.sort(), [obj31, obj31.$iteRemtest].map(getId).sort(),
@@ -249,7 +249,7 @@ module.exports = {
 
 		obj32 = new Type3();
 		obj11.otherMultipleObj.delete(obj32);
-		a.deep(updates, [obj11.otherMultipleObj.$get(obj32).__id__],
+		a.deep(updates, [obj11.otherMultipleObj.$getOwn(obj32).__id__],
 			"Invoke delete item: Updates");
 		updates.length = 0;
 		a.deep(deletes, [], "Invoke delete item: Deletes");

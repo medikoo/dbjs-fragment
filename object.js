@@ -12,26 +12,26 @@ var assign         = require('es5-ext/object/assign')
   , Set            = require('observable-set/create-read-only')(
 	require('observable-set/primitive')
 )
-  , serialize      = require('dbjs/_setup/utils/serialize')
+  , serialize      = require('dbjs/_setup/serialize/object')
 
   , defineProperties = Object.defineProperties
   , Fragment, pass;
 
-pass  = function (obj, ident, rules) {
+pass  = function (obj, sKey, rules) {
 	var tree, current, deepPass, pass;
 	if (rules['/'] === 2) deepPass = true;
-	if (!obj.__parent__) {
-		pass = rules[ident];
+	if (!obj.owner) {
+		pass = rules[sKey];
 		if (pass) return true;
 		if (pass === 0) return false;
 		if (deepPass) return true;
 		return false;
 	}
-	tree = [ident];
+	tree = [sKey];
 	do {
-		tree.unshift(obj.__ident__);
-		obj = obj.__parent__;
-	} while (obj.__parent__);
+		tree.unshift(obj.__sKey__);
+		obj = obj.owner;
+	} while (obj.owner);
 	current = tree.shift();
 	while (true) {
 		pass = rules[current];
@@ -41,9 +41,9 @@ pass  = function (obj, ident, rules) {
 			if (pass === 0) return false;
 			if (!deepPass) return false;
 		}
-		ident = tree.shift();
-		if (!ident) return true;
-		current += '/' + ident;
+		sKey = tree.shift();
+		if (!sKey) return true;
+		current += '/' + sKey;
 	}
 };
 
@@ -78,7 +78,7 @@ Fragment.prototype = Object.create(Set.prototype, assign({
 	}),
 	onDescriptor: d(function (desc) {
 		var event;
-		if (!pass(desc.__object__, desc._ident_, this.__rules__)) return;
+		if (!pass(desc.object, desc._sKey_, this.__rules__)) return;
 		event = desc._lastOwnEvent_;
 		if (event && (event.value !== undefined)) {
 			this.__setData__[desc.__id__] = desc;
@@ -87,7 +87,7 @@ Fragment.prototype = Object.create(Set.prototype, assign({
 	}),
 	onItem: d(function (obj) {
 		var event;
-		if (!pass(obj.__object__, obj._pIdent_, this.__rules__)) return;
+		if (!pass(obj.object, obj._pSKey_, this.__rules__)) return;
 		event = obj._lastOwnEvent_;
 		if (!event) return;
 		if (event.value === undefined) return;
@@ -97,9 +97,9 @@ Fragment.prototype = Object.create(Set.prototype, assign({
 	onUpdate: d(function (event) {
 		var obj = event.object, kind = obj._kind_;
 		if (kind === 'descriptor') {
-			if (!pass(obj.__object__, obj._ident_, this.__rules__)) return;
+			if (!pass(obj.object, obj._sKey_, this.__rules__)) return;
 		} else if (kind !== 'object') {
-			if (!pass(obj.__object__, obj._pIdent_, this.__rules__)) return;
+			if (!pass(obj.object, obj._pSKey_, this.__rules__)) return;
 		}
 		if (event.value === undefined) this._delete(obj);
 		else this._add(obj);

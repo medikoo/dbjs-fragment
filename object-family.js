@@ -12,21 +12,21 @@ var assign         = require('es5-ext/object/assign-multiple')
   , create = Object.create, defineProperties = Object.defineProperties
   , Driver, pass;
 
-pass = function (obj, ident, rules) {
+pass = function (obj, sKey, rules) {
 	var tree, current, deepPass, pass = rules['/'];
 	if (pass && pass.$deep) deepPass = pass;
-	if (!obj.__parent__) {
-		pass = rules[ident];
+	if (!obj.owner) {
+		pass = rules[sKey];
 		if (pass) return pass;
 		if (pass === false) return false;
 		if (deepPass) return deepPass;
 		return false;
 	}
-	tree = [ident];
+	tree = [sKey];
 	do {
-		tree.unshift(obj.__ident__);
-		obj = obj.__parent__;
-	} while (obj.__parent__);
+		tree.unshift(obj.__sKey__);
+		obj = obj.owner;
+	} while (obj.owner);
 	current = tree.shift();
 	while (true) {
 		pass = rules[current];
@@ -36,9 +36,9 @@ pass = function (obj, ident, rules) {
 			if (pass === false) return false;
 			if (!deepPass) return false;
 		}
-		ident = tree.shift();
-		if (!ident) return pass || deepPass;
-		current += '/' + ident;
+		sKey = tree.shift();
+		if (!sKey) return pass || deepPass;
+		current += '/' + sKey;
 	}
 };
 
@@ -70,15 +70,15 @@ defineProperties(Driver.prototype, assign({
 		this.__fragment__.destroy();
 	}),
 	onAssign: d(function (dbObj) {
-		var rules, args, ident;
-		if (this.__path__[dbObj.__master__.__id__]) return;
+		var rules, args, sKey;
+		if (this.__path__[dbObj.master.__id__]) return;
 		rules = this.__rules__.assignment;
 		if (!rules) return;
-		if (dbObj._kind_ === 'descriptor') ident = dbObj._ident_;
-		else ident = dbObj._pIdent_;
-		rules = pass(dbObj.__object__, ident, rules);
+		if (dbObj._kind_ === 'descriptor') sKey = dbObj._sKey_;
+		else sKey = dbObj._pSKey_;
+		rules = pass(dbObj.object, sKey, rules);
 		if (!rules) return;
-		args = [dbObj.__master__, rules.property, rules.value, rules.assignment];
+		args = [dbObj.master, rules.property, rules.value, rules.assignment];
 		this.__values__[dbObj.__id__] = { args: args };
 		this.extend.apply(this, args);
 	}),
@@ -96,16 +96,16 @@ defineProperties(Driver.prototype, assign({
 }), autoBind({
 	onUpdate: d(function (event) {
 		var dbObj = event.object, kind = dbObj._kind_, old, value, rules, args
-		  , removed, ident;
+		  , removed, sKey;
 		if (kind === 'object') return;
 		if (kind === 'sub-descriptor') return;
 		if (kind === 'descriptor') {
 			value = event.value;
-			ident = dbObj._ident_;
+			sKey = dbObj._sKey_;
 		} else {
 			removed = !event.value;
-			value = dbObj._key_;
-			ident = dbObj._pIdent_;
+			value = dbObj.key;
+			sKey = dbObj._pSKey_;
 		}
 		old = this.__values__[dbObj.__id__];
 		if (old) {
@@ -115,12 +115,12 @@ defineProperties(Driver.prototype, assign({
 		}
 		if (removed) return;
 		if (!value || !value.__id__ || (value._kind_ !== 'object')) return;
-		if (this.__path__[value.__master__.__id__]) return;
+		if (this.__path__[value.master.__id__]) return;
 		rules = this.__rules__.value;
 		if (!rules) return;
-		rules = pass(dbObj.__object__, ident, rules);
+		rules = pass(dbObj.object, sKey, rules);
 		if (!rules) return;
-		args = [value.__master__, rules.property, rules.value, rules.assignment];
+		args = [value.master, rules.property, rules.value, rules.assignment];
 		this.__values__[dbObj.__id__] = { object: value, args: args };
 		this.extend.apply(this, args);
 	}),

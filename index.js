@@ -5,7 +5,7 @@ var assign         = require('es5-ext/object/assign')
   , d              = require('d/d')
   , autoBind       = require('d/auto-bind')
   , MultiSet       = require('observable-multi-set/primitive')
-  , serialize      = require('dbjs/_setup/utils/serialize-object')
+  , serialize      = require('dbjs/_setup/serialize/object')
 
   , create = Object.create, defineProperty = Object.defineProperty
   , hasOwnProperty = Object.prototype.hasOwnProperty

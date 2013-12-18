@@ -20,11 +20,11 @@ module.exports = function (T, a) {
 	fragment.on('update', function (event) { updates.push(event.object); });
 
 	a.deep(toArray(fragment).map(getId).sort(), [obj, obj.$marko,
-		obj.$pablo.$type, obj.$pablo.$multiple, obj.pablo.$get('foo'),
-		obj.pablo.$get('bar')].map(getId).sort(), "Initial");
+		obj.$pablo.$type, obj.$pablo.$multiple, obj.pablo.$getOwn('foo'),
+		obj.pablo.$getOwn('bar')].map(getId).sort(), "Initial");
 
 	obj.foo.add('dwa');
-	a.deep(updates, [obj.foo.$get('dwa')], "Add multiple");
+	a.deep(updates, [obj.foo.$getOwn('dwa')], "Add multiple");
 	updates.length = 0;
 
 	obj.marko = 'raz';
