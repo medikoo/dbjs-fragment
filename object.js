@@ -17,10 +17,10 @@ var assign         = require('es5-ext/object/assign')
   , defineProperties = Object.defineProperties
   , Fragment, pass;
 
-pass  = function (obj, sKey, rules) {
+pass = function (rootObj, obj, sKey, rules) {
 	var tree, current, deepPass, pass;
 	if (rules['/'] === 2) deepPass = true;
-	if (!obj.owner) {
+	if (!obj.owner || (obj === rootObj)) {
 		pass = rules[sKey];
 		if (pass) return true;
 		if (pass === 0) return false;
@@ -31,7 +31,7 @@ pass  = function (obj, sKey, rules) {
 	do {
 		tree.unshift(obj.__sKey__);
 		obj = obj.owner;
-	} while (obj.owner);
+	} while (obj.owner || (obj === rootObj));
 	current = tree.shift();
 	while (true) {
 		pass = rules[current];
@@ -78,7 +78,9 @@ Fragment.prototype = Object.create(Set.prototype, assign({
 	}),
 	onDescriptor: d(function (desc) {
 		var event;
-		if (!pass(desc.object, desc._sKey_, this.__rules__)) return;
+		if (!pass(this.__object__, desc.object, desc._sKey_, this.__rules__)) {
+			return;
+		}
 		event = desc._lastOwnEvent_;
 		if (event && (event.value !== undefined)) {
 			this.__setData__[desc.__id__] = desc;
@@ -87,7 +89,7 @@ Fragment.prototype = Object.create(Set.prototype, assign({
 	}),
 	onItem: d(function (obj) {
 		var event;
-		if (!pass(obj.object, obj._pSKey_, this.__rules__)) return;
+		if (!pass(this.__object__, obj.object, obj._pSKey_, this.__rules__)) return;
 		event = obj._lastOwnEvent_;
 		if (!event) return;
 		if (event.value === undefined) return;
@@ -97,9 +99,13 @@ Fragment.prototype = Object.create(Set.prototype, assign({
 	onUpdate: d(function (event) {
 		var obj = event.object, kind = obj._kind_;
 		if (kind === 'descriptor') {
-			if (!pass(obj.object, obj._sKey_, this.__rules__)) return;
+			if (!pass(this.__object__, obj.object, obj._sKey_, this.__rules__)) {
+				return;
+			}
 		} else if (kind !== 'object') {
-			if (!pass(obj.object, obj._pSKey_, this.__rules__)) return;
+			if (!pass(this.__object__, obj.object, obj._pSKey_, this.__rules__)) {
+				return;
+			}
 		}
 		if (event.value === undefined) this._delete(obj);
 		else this._add(obj);
