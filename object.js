@@ -2,7 +2,8 @@
 
 'use strict';
 
-var assign         = require('es5-ext/object/assign')
+var startsWith     = require('es5-ext/string/#/starts-with')
+  , assign         = require('es5-ext/object/assign')
   , copy           = require('es5-ext/object/copy')
   , setPrototypeOf = require('es5-ext/object/set-prototype-of')
   , validValue     = require('es5-ext/object/valid-value')
@@ -56,7 +57,7 @@ module.exports = Fragment = function (obj, rules) {
 		__rules__: d('', rules)
 	});
 	if (obj._lastOwnEvent_) this.__setData__[obj.__id__] = obj;
-	obj.on('update', this.onUpdate);
+	obj.master.on('update', this.onUpdate);
 	this.onObject(obj);
 };
 setPrototypeOf(Fragment, Set);
@@ -98,6 +99,7 @@ Fragment.prototype = Object.create(Set.prototype, assign({
 }, autoBind({
 	onUpdate: d(function (event) {
 		var obj = event.object, kind = obj._kind_;
+		if (!startsWith.call(obj.__valueId__, this.__object__.__valueId__)) return;
 		if (kind === 'descriptor') {
 			if (!pass(this.__object__, obj.object, obj._sKey_, this.__rules__)) {
 				return;
