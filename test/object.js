@@ -34,4 +34,14 @@ module.exports = function (T, a) {
 	obj.restricted.add('bar');
 	obj.$restricted.required = true;
 	a.deep(updates, [], "Update restricted");
+
+	Type = db.Object.extend('ObjFragTest1',
+		{ foo: { type: db.Object, nested: true } });
+
+	obj = new Type();
+	fragment = new T(obj.foo, { 'raz': 1 });
+	updates = [];
+	fragment.on('update', function (event) { updates.push(event.object); });
+	obj.foo.set('raz', 'dwa');
+	a.deep(updates, [obj.foo.$raz], "Non master fragment");
 };
