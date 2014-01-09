@@ -4,7 +4,7 @@ var toArray  = require('es6-iterator/to-array')
   , Database = require('dbjs')
   , Rules    = require('../rules')
 
-  , getId = function (obj) { return obj.__id__; };
+  , getId = function (obj) { return obj.__valueId__; };
 
 module.exports = function (T, a) {
 	var db = new Database(), Type1, Type2, Type3, obj11, obj21, obj31, obj32
@@ -39,7 +39,7 @@ module.exports = function (T, a) {
 		obj11.$otherObj, obj31, obj31.$iteRemtest, obj21,
 		obj21.$iteTest].map(getId).sort(), "Content");
 	updates = [];
-	set.on('update', function (event) { updates.push(event.object.__id__); });
+	set.on('update', function (event) { updates.push(event.object.__valueId__); });
 	deletes = [];
 	set.on('delete', function (id) { deletes.push(id); });
 
@@ -49,7 +49,7 @@ module.exports = function (T, a) {
 		obj11.iteTestMulti.$getOwn('raz'), obj11.iteTestMulti.$getOwn('dwa'),
 		obj11.$otherObj, obj21,
 		obj21.$iteTest].map(getId).sort(), "Content");
-	a.deep(updates, [obj11.$otherObj.__id__], "Update events");
+	a.deep(updates, [obj11.$otherObj.__valueId__], "Update events");
 	updates.length = 0;
 	a.deep(deletes.sort(), [obj31, obj31.$iteRemtest].map(getId).sort(),
 		"Delete events");
@@ -60,7 +60,7 @@ module.exports = function (T, a) {
 	a.deep(toArray(set).map(getId).sort(), [obj11, obj11.$iteTestStr,
 		obj11.iteTestMulti.$getOwn('raz'), obj11.iteTestMulti.$getOwn('dwa'),
 		obj11.$otherObj].map(getId).sort(), "Content");
-	a.deep(updates, [obj21.$iteTest.__id__], "Update events");
+	a.deep(updates, [obj21.$iteTest.__valueId__], "Update events");
 	updates.length = 0;
 	a.deep(deletes.sort(), [obj21, obj21.$iteTest].map(getId).sort(),
 		"Delete events");
@@ -84,7 +84,7 @@ module.exports = function (T, a) {
 		obj11.iteTestMulti.$getOwn('raz'), obj11.iteTestMulti.$getOwn('dwa'),
 		obj11.$otherObj].map(getId).sort(),
 		"Content");
-	a.deep(updates, [obj11.otherMultipleObj.$getOwn(obj31).__id__],
+	a.deep(updates, [obj11.otherMultipleObj.$getOwn(obj31).__valueId__],
 		"Update events");
 	updates.length = 0;
 	a.deep(deletes.sort(), [obj31, obj31.$iteRemtest].map(getId).sort(),
@@ -98,7 +98,7 @@ module.exports = function (T, a) {
 		obj11.$otherObj].map(getId).sort(),
 		"Content");
 	obj11.otherMultipleObj.delete(obj32);
-	a.deep(updates, [obj11.otherMultipleObj.$getOwn(obj32).__id__],
+	a.deep(updates, [obj11.otherMultipleObj.$getOwn(obj32).__valueId__],
 		"Update events");
 	updates.length = 0;
 	a.deep(deletes, [], "Delete events");

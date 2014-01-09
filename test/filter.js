@@ -4,7 +4,7 @@ var toArray    = require('es6-iterator/to-array')
   , Database   = require('dbjs')
   , objectFrag = require('../object-family')
 
-  , getId = function (obj) { return obj.__id__; };
+  , getId = function (obj) { return obj.__valueId__; };
 
 module.exports = function (t, a) {
 	var db = new Database(), Type1, Type2, Type3, obj11, obj21, obj31, obj32
@@ -35,20 +35,20 @@ module.exports = function (t, a) {
 		obj21.$iteTest].map(getId).sort(), "Objects");
 	updates = [];
 	iterator.on('update', function (event) {
-		updates.push(event.object.__id__);
+		updates.push(event.object.__valueId__);
 	});
 	deletes = [];
 	iterator.on('delete', function (id) { deletes.push(id); });
 
 	obj11.otherObj = null;
-	a.deep(updates, [obj11.$otherObj.__id__], "Clear existing: Updates");
+	a.deep(updates, [obj11.$otherObj.__valueId__], "Clear existing: Updates");
 	updates.length = 0;
 	a.deep(deletes.sort(), [obj31, obj31.$iteRemtest].map(getId).sort(),
 			"Clear existing: Deletes");
 	deletes.length = 0;
 
 	obj21.iteTest = null;
-	a.deep(updates, [obj21.$iteTest.__id__], "Remove reverse: Updates");
+	a.deep(updates, [obj21.$iteTest.__valueId__], "Remove reverse: Updates");
 	updates.length = 0;
 	a.deep(deletes.sort(), [obj21, obj21.$iteTest].map(getId).sort(),
 		"Remove reverse: Deletes");

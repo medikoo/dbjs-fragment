@@ -4,7 +4,7 @@ var toArray      = require('es6-iterator/to-array')
   , Database     = require('dbjs')
   , ObjectFamily = require('../object-family')
 
-  , getId = function (obj) { return obj.__id__; };
+  , getId = function (obj) { return obj.__valueId__; };
 
 module.exports = {
 	"Auth object Legacy": function (T, a) {
@@ -32,7 +32,7 @@ module.exports = {
 		set = new T();
 		set.sets.add(frag);
 		updates = [];
-		set.on('update', function (event) { updates.push(event.object.__id__); });
+		set.on('update', function (event) { updates.push(event.object.__valueId__); });
 		deletes = [];
 		set.on('delete', function (id) { deletes.push(id); });
 
@@ -44,7 +44,7 @@ module.exports = {
 				obj21, obj21.$iteTest].map(getId).sort(), "Initial");
 
 		obj11.otherObj = null;
-		a.deep(updates, [obj11.$otherObj.__id__], "Clear existing: Updates");
+		a.deep(updates, [obj11.$otherObj.__valueId__], "Clear existing: Updates");
 		updates.length = 0;
 		a.deep(deletes.sort(), [obj31, obj31.$iteRemtest].map(getId).sort(),
 			"Clear existing: Deletes");
@@ -57,7 +57,7 @@ module.exports = {
 				obj21, obj21.$iteTest].map(getId).sort(), "Clear existing: Total");
 
 		obj21.iteTest = null;
-		a.deep(updates, [obj21.$iteTest.__id__], "Delete reverse: Updates");
+		a.deep(updates, [obj21.$iteTest.__valueId__], "Delete reverse: Updates");
 		updates.length = 0;
 		a.deep(deletes.sort(), [obj21, obj21.$iteTest].map(getId).sort(),
 			"Delete reverse: Deletes");
@@ -82,7 +82,7 @@ module.exports = {
 				obj31.$iteRemtest].map(getId).sort(), "Add obj item: Total");
 
 		obj11.otherMultipleObj.delete(obj31);
-		a.deep(updates, [obj11.otherMultipleObj.$getOwn(obj31).__id__],
+		a.deep(updates, [obj11.otherMultipleObj.$getOwn(obj31).__valueId__],
 			"Delete obj item: Updates");
 		updates.length = 0;
 		a.deep(deletes.sort(), [obj31, obj31.$iteRemtest].map(getId).sort(),
@@ -97,7 +97,7 @@ module.exports = {
 
 		obj32 = new Type3();
 		obj11.otherMultipleObj.delete(obj32);
-		a.deep(updates, [obj11.otherMultipleObj.$getOwn(obj32).__id__],
+		a.deep(updates, [obj11.otherMultipleObj.$getOwn(obj32).__valueId__],
 			"Invoke delete item: Updates");
 		updates.length = 0;
 		a.deep(deletes, [], "Invoke delete item: Deletes");
@@ -130,7 +130,7 @@ module.exports = {
 		set.sets.add(frag2);
 		set.sets.add(frag);
 		updates = [];
-		set.on('update', function (event) { updates.push(event.object.__id__); });
+		set.on('update', function (event) { updates.push(event.object.__valueId__); });
 		deletes = [];
 		set.on('delete', function (id) { deletes.push(id); });
 
@@ -178,7 +178,7 @@ module.exports = {
 
 		set = new T();
 		updates = [];
-		set.on('update', function (event) { updates.push(event.object.__id__); });
+		set.on('update', function (event) { updates.push(event.object.__valueId__); });
 		deletes = [];
 		set.on('delete', function (id) { deletes.push(id); });
 
@@ -204,7 +204,7 @@ module.exports = {
 		deletes.length = 0;
 
 		obj11.otherObj = null;
-		a.deep(updates, [obj11.$otherObj.__id__], "Clear existing: Updates");
+		a.deep(updates, [obj11.$otherObj.__valueId__], "Clear existing: Updates");
 		updates.length = 0;
 		a.deep(deletes, [], "Clear existing: Deletes");
 		deletes.length = 0;
@@ -218,7 +218,7 @@ module.exports = {
 		deletes.length = 0;
 
 		obj21.iteTest = null;
-		a.deep(updates, [obj21.$iteTest.__id__], "Delete reverse: Updates");
+		a.deep(updates, [obj21.$iteTest.__valueId__], "Delete reverse: Updates");
 		updates.length = 0;
 		a.deep(deletes.sort(), [obj21, obj21.$iteTest].map(getId).sort(),
 			"Delete reverse: Deletes");
@@ -240,7 +240,7 @@ module.exports = {
 		deletes.length = 0;
 
 		obj11.otherMultipleObj.delete(obj31);
-		a.deep(updates, [obj11.otherMultipleObj.$getOwn(obj31).__id__],
+		a.deep(updates, [obj11.otherMultipleObj.$getOwn(obj31).__valueId__],
 			"Add obj item: Updates");
 		updates.length = 0;
 		a.deep(deletes.sort(), [obj31, obj31.$iteRemtest].map(getId).sort(),
@@ -249,7 +249,7 @@ module.exports = {
 
 		obj32 = new Type3();
 		obj11.otherMultipleObj.delete(obj32);
-		a.deep(updates, [obj11.otherMultipleObj.$getOwn(obj32).__id__],
+		a.deep(updates, [obj11.otherMultipleObj.$getOwn(obj32).__valueId__],
 			"Invoke delete item: Updates");
 		updates.length = 0;
 		a.deep(deletes, [], "Invoke delete item: Deletes");

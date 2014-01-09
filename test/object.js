@@ -3,7 +3,7 @@
 var toArray  = require('es6-iterator/to-array')
   , Database = require('dbjs')
 
-  , getId = function (obj) { return obj.__id__; };
+  , getId = function (obj) { return obj.__valueId__; };
 
 module.exports = function (T, a) {
 	var db = new Database(), obj, updates = [], fragment, Type;
