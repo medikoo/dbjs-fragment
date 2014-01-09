@@ -32,7 +32,9 @@ module.exports = {
 		set = new T();
 		set.sets.add(frag);
 		updates = [];
-		set.on('update', function (event) { updates.push(event.object.__valueId__); });
+		set.on('update', function (event) {
+			updates.push(event.object.__valueId__);
+		});
 		deletes = [];
 		set.on('delete', function (id) { deletes.push(id); });
 
@@ -130,7 +132,9 @@ module.exports = {
 		set.sets.add(frag2);
 		set.sets.add(frag);
 		updates = [];
-		set.on('update', function (event) { updates.push(event.object.__valueId__); });
+		set.on('update', function (event) {
+			updates.push(event.object.__valueId__);
+		});
 		deletes = [];
 		set.on('delete', function (id) { deletes.push(id); });
 
@@ -178,7 +182,9 @@ module.exports = {
 
 		set = new T();
 		updates = [];
-		set.on('update', function (event) { updates.push(event.object.__valueId__); });
+		set.on('update', function (event) {
+			updates.push(event.object.__valueId__);
+		});
 		deletes = [];
 		set.on('delete', function (id) { deletes.push(id); });
 

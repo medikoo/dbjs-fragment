@@ -39,7 +39,9 @@ module.exports = function (T, a) {
 		obj11.$otherObj, obj31, obj31.$iteRemtest, obj21,
 		obj21.$iteTest].map(getId).sort(), "Content");
 	updates = [];
-	set.on('update', function (event) { updates.push(event.object.__valueId__); });
+	set.on('update', function (event) {
+		updates.push(event.object.__valueId__);
+	});
 	deletes = [];
 	set.on('delete', function (id) { deletes.push(id); });
 
