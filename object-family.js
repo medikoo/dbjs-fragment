@@ -147,6 +147,9 @@ module.exports = function (obj/*, rules*/) {
 	var fragment = new MultiSet(), rules = arguments[1];
 	if (rules === undefined) rules = new Rules();
 	else validValue(rules);
+	if ((rules.value == null) && (rules.assignment == null)) {
+		return new ObjectFragment(obj, rules.property);
+	}
 	new Driver(fragment, obj, null, rules); //jslint: skip
 	return fragment;
 };
