@@ -49,7 +49,7 @@ Fragment.prototype = Object.create(MultiSet.prototype, assign({
 		event = obj._lastOwnEvent_;
 		if (event.value === undefined) return true;
 		delete this.__evented__[event.index];
-		this.emit('delete', obj.__valueId__, obj.__id__);
+		this.emit('delete', obj.__valueId__, obj.__id__, event);
 		return true;
 	}),
 	destroy: d(function () { this.sets.clear(); })

@@ -45,10 +45,10 @@ Fragment.prototype = create(Set.prototype, assign({
 		this._add(obj);
 		this.emit('update', event);
 	}),
-	_onDelete: d(function (valueId, id) {
+	_onDelete: d(function (valueId, id, event) {
 		var obj = this.__setData__[id];
 		if (!obj) return;
 		this._delete(obj);
-		this.emit('delete', valueId);
+		this.emit('delete', valueId, id, event);
 	})
 })));
