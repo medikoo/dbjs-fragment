@@ -12,10 +12,10 @@ var assign         = require('es5-ext/object/assign-multiple')
   , create = Object.create, defineProperties = Object.defineProperties
   , Driver, pass;
 
-pass = function (obj, sKey, rules) {
+pass = function (rootObj, obj, sKey, rules) {
 	var tree, current, deepPass, pass = rules['/'];
 	if (pass && pass.$deep) deepPass = pass;
-	if (!obj.owner) {
+	if (!obj.owner || (obj === rootObj)) {
 		pass = rules[sKey];
 		if (pass) return pass;
 		if (pass === false) return false;
@@ -26,7 +26,7 @@ pass = function (obj, sKey, rules) {
 	do {
 		tree.unshift(obj.__sKey__);
 		obj = obj.owner;
-	} while (obj.owner);
+	} while (obj.owner || (obj === rootObj));
 	current = tree.shift();
 	while (true) {
 		pass = rules[current];
@@ -76,7 +76,7 @@ defineProperties(Driver.prototype, assign({
 		if (!rules) return;
 		if (dbObj._kind_ === 'descriptor') sKey = dbObj._sKey_;
 		else sKey = dbObj._pSKey_;
-		rules = pass(dbObj.object, sKey, rules);
+		rules = pass(this.__object__, dbObj.object, sKey, rules);
 		if (!rules) return;
 		args = [dbObj.master, rules.property, rules.value, rules.assignment];
 		this.__values__[dbObj.__id__] = { args: args };
@@ -118,7 +118,7 @@ defineProperties(Driver.prototype, assign({
 		if (this.__path__[value.master.__id__]) return;
 		rules = this.__rules__.value;
 		if (!rules) return;
-		rules = pass(dbObj.object, sKey, rules);
+		rules = pass(this.__object__, dbObj.object, sKey, rules);
 		if (!rules) return;
 		args = [value.master, rules.property, rules.value, rules.assignment];
 		this.__values__[dbObj.__id__] = { object: value, args: args };

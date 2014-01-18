@@ -105,4 +105,16 @@ module.exports = function (T, a) {
 	updates.length = 0;
 	a.deep(deletes, [], "Delete events");
 	deletes.length = 0;
+
+	Type1 = db.Object.extend('ObjFragTest1',
+		{ foo: { type: db.Object, nested: true } });
+
+	obj11 = new Type1();
+	obj11.foo.set('raz', new db.Object({ marko: 'raz' }));
+	set = new T(obj11.foo, { property: { 'raz': 1 },
+		value: { raz: { property: { marko: 1 } } } });
+	updates = [];
+	set.on('update', function (event) { updates.push(event.object); });
+	obj11.foo.raz.marko = 'elo';
+	a.deep(updates, [obj11.foo.raz.$marko], "Non master fragment");
 };
