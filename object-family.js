@@ -12,6 +12,9 @@ var assign         = require('es5-ext/object/assign-multiple')
   , create = Object.create, defineProperties = Object.defineProperties
   , Driver, pass;
 
+require('memoizee/lib/ext/dispose');
+require('memoizee/lib/ext/ref-counter');
+
 pass = function (rootObj, obj, sKey, rules) {
 	var tree, current, deepPass, pass = rules['/'];
 	if (pass && pass.$deep) deepPass = pass;
