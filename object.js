@@ -32,7 +32,7 @@ pass = function (rootObj, obj, sKey, rules) {
 	do {
 		tree.unshift(obj.__sKey__);
 		obj = obj.owner;
-	} while (obj.owner || (obj === rootObj));
+	} while (obj.owner && (obj !== rootObj));
 	current = tree.shift();
 	while (true) {
 		pass = rules[current];
