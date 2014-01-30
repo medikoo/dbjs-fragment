@@ -117,4 +117,14 @@ module.exports = function (T, a) {
 	set.on('update', function (event) { updates.push(event.object); });
 	obj11.foo.raz.marko = 'elo';
 	a.deep(updates, [obj11.foo.raz.$marko], "Non master fragment");
+
+	a.h1("Value on nested");
+	obj11 = new Type1();
+	obj21 = new db.Object();
+	obj11.foo.set('elo', obj21);
+	obj21.set('bar', 'raz');
+	set = new T(obj11, { property: { '/': 2 },
+		value: { 'foo/elo': { property: { '/': 2 } } } });
+	a.deep(toArray(set).map(getId).sort(),
+		[obj11, obj11.foo.$elo, obj21, obj21.$bar].map(getId).sort());
 };

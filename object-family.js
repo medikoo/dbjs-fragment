@@ -37,7 +37,6 @@ pass = function (rootObj, obj, sKey, rules) {
 			if (pass.$deep) deepPass = pass;
 		} else {
 			if (pass === false) return false;
-			if (!deepPass) return false;
 		}
 		sKey = tree.shift();
 		if (!sKey) return pass || deepPass;
