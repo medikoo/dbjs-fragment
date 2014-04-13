@@ -1,6 +1,6 @@
 'use strict';
 
-var assign         = require('es5-ext/object/assign-multiple')
+var assign         = require('es5-ext/object/assign')
   , validValue     = require('es5-ext/object/valid-value')
   , d              = require('d/d')
   , autoBind       = require('d/auto-bind')
