@@ -9,7 +9,7 @@ var startsWith     = require('es5-ext/string/#/starts-with')
   , validValue     = require('es5-ext/object/valid-value')
   , d              = require('d')
   , autoBind       = require('d/auto-bind')
-  , allOff         = require('event-emitter/lib/all-off')
+  , allOff         = require('event-emitter/all-off')
   , Set            = require('observable-set/create-read-only')(
 	require('observable-set/primitive')
 )
