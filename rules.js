@@ -1,7 +1,7 @@
 'use strict';
 
 var assign = require('es5-ext/object/assign')
-  , d      = require('d/d')
+  , d      = require('d')
   , lazy   = require('d/lazy')
 
   , Rules = module.exports = function () {};

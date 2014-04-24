@@ -2,7 +2,7 @@
 
 var assign         = require('es5-ext/object/assign')
   , setPrototypeOf = require('es5-ext/object/set-prototype-of')
-  , d              = require('d/d')
+  , d              = require('d')
   , autoBind       = require('d/auto-bind')
   , MultiSet       = require('observable-multi-set/primitive')
   , serialize      = require('dbjs/_setup/serialize/object')

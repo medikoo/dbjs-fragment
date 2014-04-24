@@ -2,7 +2,7 @@
 
 var assign         = require('es5-ext/object/assign')
   , validValue     = require('es5-ext/object/valid-value')
-  , d              = require('d/d')
+  , d              = require('d')
   , autoBind       = require('d/auto-bind')
   , memoize        = require('memoizee/lib/d')(require('memoizee/lib/regular'))
   , ObjectFragment = require('./object')

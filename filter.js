@@ -3,7 +3,7 @@
 var assign         = require('es5-ext/object/assign')
   , setPrototypeOf = require('es5-ext/object/set-prototype-of')
   , callable       = require('es5-ext/object/valid-callable')
-  , d              = require('d/d')
+  , d              = require('d')
   , autoBind       = require('d/auto-bind')
   , Set            = require('observable-set/create-read-only')(
 	require('observable-set/primitive')
