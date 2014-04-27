@@ -4,7 +4,8 @@ var assign         = require('es5-ext/object/assign')
   , validValue     = require('es5-ext/object/valid-value')
   , d              = require('d')
   , autoBind       = require('d/auto-bind')
-  , memoize        = require('memoizee/lib/d')(require('memoizee/lib/regular'))
+  , memoizeMethods = require('memoizee/methods')
+  , getNormalizer  = require('memoizee/normalizers/get-fixed')
   , ObjectFragment = require('./object')
   , MultiSet       = require('./')
   , Rules          = require('./rules')
@@ -12,8 +13,8 @@ var assign         = require('es5-ext/object/assign')
   , create = Object.create, defineProperties = Object.defineProperties
   , Driver, pass;
 
-require('memoizee/lib/ext/dispose');
-require('memoizee/lib/ext/ref-counter');
+require('memoizee/ext/dispose');
+require('memoizee/ext/ref-counter');
 
 pass = function (rootObj, obj, sKey, rules) {
 	var tree, current, deepPass, pass = rules['/'];
@@ -68,7 +69,7 @@ defineProperties(Driver.prototype, assign({
 		this.__main__.sets.delete(this.__fragment__);
 		this.__fragment__.off('update', this.onUpdate);
 		this.__object__._assignments_.off('change', this.onAssignChange);
-		this.extend.clearAll();
+		this.extend.clear();
 		this.__fragment__.destroy();
 	}),
 	onAssign: d(function (dbObj) {
@@ -87,14 +88,15 @@ defineProperties(Driver.prototype, assign({
 	onDismiss: d(function (dbObj) {
 		var data = this.__values__[dbObj.__id__];
 		if (!data) return;
-		this.extend.clearRef.apply(this, data.args);
+		this.extend.deleteRef.apply(this, data.args);
 		delete this.__values__[dbObj.__id__];
 	})
-}, memoize({
+}, memoizeMethods({
 	extend: d(function (object, rProperty, rValue, rAssignment) {
 		return new Driver(this.__main__, object, this.__path__,
 			{ property: rProperty, value: rValue, assignment: rAssignment });
-	}, { refCounter: true, dispose: function (driver) { driver.destroy(); } })
+	}, { getNormalizer: getNormalizer, refCounter: true,
+		dispose: function (driver) { driver.destroy(); } })
 }), autoBind({
 	onUpdate: d(function (event) {
 		var dbObj = event.object, kind = dbObj._kind_, old, value, rules, args
@@ -112,7 +114,7 @@ defineProperties(Driver.prototype, assign({
 		old = this.__values__[dbObj.__id__];
 		if (old) {
 			if (!removed && (value === old.object)) return;
-			this.extend.clearRef.apply(this, old.args);
+			this.extend.deleteRef.apply(this, old.args);
 			delete this.__values__[dbObj.__id__];
 		}
 		if (removed) return;
