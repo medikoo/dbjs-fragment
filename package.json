@@ -28,7 +28,6 @@
     "observable-set": "git://github.com/medikoo/observable-set.git"
   },
   "devDependencies": {
-    "es6-iterator": "git://github.com/medikoo/es6-iterator.git",
     "tad": "~0.1.20"
   },
   "scripts": {
