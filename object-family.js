@@ -154,6 +154,6 @@ module.exports = function (obj/*, rules*/) {
 	if ((rules.value == null) && (rules.assignment == null)) {
 		return new ObjectFragment(obj, rules.property);
 	}
-	new Driver(fragment, obj, null, rules); //jslint: skip
+	new Driver(fragment, obj, null, rules); //jslint: ignore
 	return fragment;
 };
