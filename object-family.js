@@ -107,6 +107,7 @@ defineProperties(Driver.prototype, assign({
 			value = event.value;
 			sKey = dbObj._sKey_;
 		} else {
+			// Multiple item
 			removed = !event.value;
 			value = dbObj.key;
 			sKey = dbObj._pSKey_;
