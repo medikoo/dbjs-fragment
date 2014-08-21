@@ -39,7 +39,7 @@ module.exports = function (T, a) {
 		{ foo: { type: db.Object, nested: true } });
 
 	obj = new Type();
-	fragment = new T(obj.foo, { 'raz': 1 });
+	fragment = new T(obj.foo, { raz: 1 });
 	updates = [];
 	fragment.on('update', function (event) { updates.push(event.object); });
 	obj.foo.set('raz', 'dwa');

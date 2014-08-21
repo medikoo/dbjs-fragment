@@ -111,7 +111,7 @@ module.exports = function (T, a) {
 
 	obj11 = new Type1();
 	obj11.foo.set('raz', new db.Object({ marko: 'raz' }));
-	set = new T(obj11.foo, { property: { 'raz': 1 },
+	set = new T(obj11.foo, { property: { raz: 1 },
 		value: { raz: { property: { marko: 1 } } } });
 	updates = [];
 	set.on('update', function (event) { updates.push(event.object); });
