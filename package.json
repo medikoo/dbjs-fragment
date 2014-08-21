@@ -28,9 +28,13 @@
     "observable-set": "git://github.com/medikoo/observable-set.git"
   },
   "devDependencies": {
-    "tad": "~0.1.20"
+    "tad": "~0.1.20",
+    "xlint": "~0.2.1",
+    "xlint-jslint-medikoo": "~0.1.1"
   },
   "scripts": {
+    "lint": "node node_modules/xlint/bin/xlint --linter=node_modules/xlint-jslint-medikoo/index.js --no-cache --no-stream",
+    "lint-console": "node node_modules/xlint/bin/xlint --linter=node_modules/xlint-jslint-medikoo/index.js --watch",
     "test": "node ./node_modules/tad/bin/tad"
   },
   "license": "MIT"
