@@ -37,8 +37,11 @@ Fragment.prototype = Object.create(MultiSet.prototype, assign({
 		return baseSetDelete.call(this, fragment);
 	}),
 	_add: d(function (obj) {
+		var event;
 		if (hasOwnProperty.call(this.__setData__, obj.__id__)) return this;
 		baseAdd.call(this, obj);
+		event = obj._lastOwnEvent_;
+		if (!event) return this;
 		this.onUpdate(obj._lastOwnEvent_);
 		return this;
 	}),
@@ -47,6 +50,7 @@ Fragment.prototype = Object.create(MultiSet.prototype, assign({
 		if (!hasOwnProperty.call(this.__setData__, obj.__id__)) return false;
 		baseDelete.call(this, obj);
 		event = obj._lastOwnEvent_;
+		if (!event) return true;
 		if (event.value === undefined) return true;
 		delete this.__evented__[event.index];
 		this.emit('delete', obj.__valueId__, obj.__id__, event);
