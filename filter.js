@@ -15,7 +15,7 @@ var assign         = require('es5-ext/object/assign')
   , Fragment;
 
 module.exports = Fragment = function (fragment, filter) {
-	if (!(this instanceof Fragment)) return new Fragment(fragment, filter);
+	if (!(this instanceof Fragment)) throw new TypeError('Constructor requires \'new\'');
 	callable(filter);
 	Set.call(this);
 	defineProperties(this, {

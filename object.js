@@ -49,7 +49,7 @@ pass = function (rootObj, obj, sKey, rules) {
 };
 
 module.exports = Fragment = function (obj, rules) {
-	if (!(this instanceof Fragment)) return new Fragment(obj, rules);
+	if (!(this instanceof Fragment)) throw new TypeError('Constructor requires \'new\'');
 	validValue(rules);
 	Set.call(this);
 	defineProperties(this, {

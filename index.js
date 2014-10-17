@@ -17,7 +17,7 @@ var assign         = require('es5-ext/object/assign')
   , Fragment;
 
 module.exports = Fragment = function (object, rules) {
-	if (!(this instanceof Fragment)) return new Fragment(object, rules);
+	if (!(this instanceof Fragment)) throw new TypeError('Constructor requires \'new\'');
 	MultiSet.call(this, null, serialize);
 	defineProperty(this, '__evented__', d('', create(null)));
 };
