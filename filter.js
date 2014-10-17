@@ -15,19 +15,19 @@ var assign         = require('es5-ext/object/assign')
   , Fragment;
 
 module.exports = Fragment = function (fragment, filter) {
+	var self;
 	if (!(this instanceof Fragment)) throw new TypeError('Constructor requires \'new\'');
 	callable(filter);
-	Set.call(this);
-	defineProperties(this, {
+	self = setPrototypeOf(new Set(), Fragment.prototype);
+	defineProperties(self, {
 		__fragment__: d('', fragment),
 		__filter__: d('', filter),
 		__validated__: d('', create(null))
 	});
-	fragment.forEach(function (obj) {
-		this._onUpdate(obj._lastOwnEvent_);
-	}, this);
-	fragment.on('update', this._onUpdate);
-	fragment.on('delete', this._onDelete);
+	fragment.forEach(function (obj) { self._onUpdate(obj._lastOwnEvent_); });
+	fragment.on('update', self._onUpdate);
+	fragment.on('delete', self._onDelete);
+	return self;
 };
 setPrototypeOf(Fragment, Set);
 

@@ -6,7 +6,7 @@ var toArray    = require('es5-ext/array/to-array')
 
   , getId = function (obj) { return obj.__valueId__; };
 
-module.exports = function (t, a) {
+module.exports = function (T, a) {
 	var db = new Database(), Type1, Type2, Type3, obj11, obj21, obj31, obj32
 	  , iterator, updates, deletes, frag;
 
@@ -29,7 +29,7 @@ module.exports = function (t, a) {
 
 	frag = objectFrag(obj11);
 
-	iterator = t(frag, function (obj) { return obj.__id__.indexOf('*') === -1; });
+	iterator = new T(frag, function (obj) { return obj.__id__.indexOf('*') === -1; });
 	a.deep(toArray(iterator).map(getId).sort(), [obj11, obj11.$iteTestStr,
 		obj11.$otherObj, obj31, obj31.$iteRemtest, obj21,
 		obj21.$iteTest].map(getId).sort(), "Objects");

@@ -49,16 +49,18 @@ pass = function (rootObj, obj, sKey, rules) {
 };
 
 module.exports = Fragment = function (obj, rules) {
+	var self;
 	if (!(this instanceof Fragment)) throw new TypeError('Constructor requires \'new\'');
 	validValue(rules);
-	Set.call(this);
-	defineProperties(this, {
+	self = setPrototypeOf(new Set(), Fragment.prototype);
+	defineProperties(self, {
 		__object__: d('', obj),
 		__rules__: d('', rules)
 	});
-	if (obj._lastOwnEvent_) this.__setData__[obj.__id__] = obj;
-	obj.master.on('update', this.onUpdate);
-	this.onObject(obj);
+	if (obj._lastOwnEvent_) self.__setData__[obj.__id__] = obj;
+	obj.master.on('update', self.onUpdate);
+	self.onObject(obj);
+	return self;
 };
 setPrototypeOf(Fragment, Set);
 
