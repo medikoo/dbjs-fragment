@@ -68,7 +68,7 @@ Fragment.prototype = Object.create(Set.prototype, assign({
 	_serialize: d(serialize),
 	destroy: d(function () {
 		var data;
-		this.__object__.off('update', this.onUpdate);
+		this.__object__.master.off('update', this.onUpdate);
 		allOff(this);
 		data = copy(this.__setData__);
 		this._clear();
