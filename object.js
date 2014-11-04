@@ -81,13 +81,9 @@ Fragment.prototype = Object.create(Set.prototype, assign({
 	}),
 	onDescriptor: d(function (desc) {
 		var event;
-		if (!pass(this.__object__, desc.object, desc._sKey_, this.__rules__)) {
-			return;
-		}
+		if (!pass(this.__object__, desc.object, desc._sKey_, this.__rules__)) return;
 		event = desc._lastOwnEvent_;
-		if (event && (event.value !== undefined)) {
-			this.__setData__[desc.__id__] = desc;
-		}
+		if (event && (event.value !== undefined)) this.__setData__[desc.__id__] = desc;
 		desc._forEachOwnDescriptor_(this.onItem, this);
 	}),
 	onItem: d(function (obj) {
@@ -103,13 +99,9 @@ Fragment.prototype = Object.create(Set.prototype, assign({
 		var obj = event.object, kind = obj._kind_;
 		if (!startsWith.call(obj.__valueId__, this.__object__.__valueId__)) return;
 		if (kind === 'descriptor') {
-			if (!pass(this.__object__, obj.object, obj._sKey_, this.__rules__)) {
-				return;
-			}
+			if (!pass(this.__object__, obj.object, obj._sKey_, this.__rules__)) return;
 		} else if (kind !== 'object') {
-			if (!pass(this.__object__, obj.object, obj._pSKey_, this.__rules__)) {
-				return;
-			}
+			if (!pass(this.__object__, obj.object, obj._pSKey_, this.__rules__)) return;
 		}
 		if (event.value === undefined) this._delete(obj);
 		else this._add(obj);
