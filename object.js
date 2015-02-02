@@ -40,10 +40,12 @@ pass = function (rootObj, obj, sKey, rules) {
 			if (pass === 2) deepPass = true;
 		} else {
 			if (pass === 0) return false;
-			if (!deepPass) return false;
 		}
 		sKey = tree.shift();
-		if (!sKey) return true;
+		if (!sKey) {
+			if (pass === 1) return true;
+			return deepPass;
+		}
 		current += '/' + sKey;
 	}
 };

@@ -36,7 +36,11 @@ module.exports = function (T, a) {
 	a.deep(updates, [], "Update restricted");
 
 	Type = db.Object.extend('ObjFragTest1',
-		{ foo: { type: db.Object, nested: true } });
+		{ foo: { type: db.Object, nested: true }, someNested: { type: db.Object, nested: true } });
+	Type.prototype.someNested.define('otherNested', {
+		nested: true,
+		type: db.Object
+	});
 
 	obj = new Type();
 	fragment = new T(obj.foo, { raz: 1 });
@@ -44,4 +48,12 @@ module.exports = function (T, a) {
 	fragment.on('update', function (event) { updates.push(event.object); });
 	obj.foo.set('raz', 'dwa');
 	a.deep(updates, [obj.foo.$raz], "Non master fragment");
+
+	obj = new Type();
+	obj.someNested.otherNested.set('elo', true);
+	fragment = new T(obj, { 'someNested/otherNested/elo': 1 });
+	updates = [];
+	fragment.on('update', function (event) { updates.push(event.object); });
+	obj.someNested.otherNested.set('elo', 12);
+	a.deep(updates, [obj.someNested.otherNested.$elo], "Deep nested");
 };
