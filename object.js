@@ -59,7 +59,10 @@ module.exports = Fragment = function (obj, rules) {
 		__object__: d('', obj),
 		__rules__: d('', rules)
 	});
-	if (obj._lastOwnEvent_) self.__setData__[obj.__id__] = obj;
+	if (obj._lastOwnEvent_) {
+		self.__setData__[obj.__id__] = obj;
+		++self.__size__;
+	}
 	obj.master.on('update', self.onUpdate);
 	self.onObject(obj);
 	return self;
@@ -85,7 +88,10 @@ Fragment.prototype = Object.create(Set.prototype, assign({
 		var event;
 		if (!pass(this.__object__, desc.object, desc._sKey_, this.__rules__)) return;
 		event = desc._lastOwnEvent_;
-		if (event && (event.value !== undefined)) this.__setData__[desc.__id__] = desc;
+		if (event && (event.value !== undefined)) {
+			this.__setData__[desc.__id__] = desc;
+			++this.__size__;
+		}
 		desc._forEachOwnDescriptor_(this.onItem, this);
 	}),
 	onItem: d(function (obj) {
@@ -95,6 +101,7 @@ Fragment.prototype = Object.create(Set.prototype, assign({
 		if (!event) return;
 		if (event.value === undefined) return;
 		this.__setData__[obj.__id__] = obj;
+		++this.__size__;
 	})
 }, autoBind({
 	onUpdate: d(function (event) {
