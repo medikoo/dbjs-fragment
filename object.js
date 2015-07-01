@@ -10,9 +10,7 @@ var startsWith     = require('es5-ext/string/#/starts-with')
   , d              = require('d')
   , autoBind       = require('d/auto-bind')
   , allOff         = require('event-emitter/all-off')
-  , Set            = require('observable-set/create-read-only')(
-	require('observable-set/primitive')
-)
+  , Set            = require('observable-set/create-read-only')(require('observable-set/primitive'))
   , serialize      = require('dbjs/_setup/serialize/object')
 
   , defineProperties = Object.defineProperties
