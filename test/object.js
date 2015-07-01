@@ -56,4 +56,28 @@ module.exports = function (T, a) {
 	fragment.on('update', function (event) { updates.push(event.object); });
 	obj.someNested.otherNested.set('elo', 12);
 	a.deep(updates, [obj.someNested.otherNested.$elo], "Deep nested");
+
+	obj = new Type();
+	obj.someNested.otherNested.set('elo', true);
+	fragment = new T(obj, { 'someNested/*/elo': 1 });
+	updates = [];
+	fragment.on('update', function (event) { updates.push(event.object); });
+	obj.someNested.otherNested.set('elo', 12);
+	a.deep(updates, [obj.someNested.otherNested.$elo], "Deep nested");
+
+	obj = new Type();
+	obj.someNested.otherNested.set('elo', true);
+	fragment = new T(obj, { 'someNested/*/elo': 1, 'someNested/otherNested/elo': 0 });
+	updates = [];
+	fragment.on('update', function (event) { updates.push(event.object); });
+	obj.someNested.otherNested.set('elo', 12);
+	a.deep(updates, [], "Deep nested");
+
+	obj = new Type();
+	obj.someNested.otherNested.set('elo', true);
+	fragment = new T(obj, { 'someNested/*/*': 1 });
+	updates = [];
+	fragment.on('update', function (event) { updates.push(event.object); });
+	obj.someNested.otherNested.set('elo', 12);
+	a.deep(updates, [obj.someNested.otherNested.$elo], "Deep nested");
 };

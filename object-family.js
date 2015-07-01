@@ -1,6 +1,8 @@
 'use strict';
 
-var assign         = require('es5-ext/object/assign')
+var find           = require('es5-ext/array/#/find')
+  , flatten        = require('es5-ext/array/#/flatten')
+  , assign         = require('es5-ext/object/assign')
   , validValue     = require('es5-ext/object/valid-value')
   , d              = require('d')
   , autoBind       = require('d/auto-bind')
@@ -10,20 +12,25 @@ var assign         = require('es5-ext/object/assign')
   , MultiSet       = require('./')
   , Rules          = require('./rules')
   , mapRules       = require('./lib/map-rules')
+  , hasRule        = require('./lib/has-rule')
+  , resolveRules   = require('./lib/resolve-rules')
 
-  , create = Object.create, defineProperties = Object.defineProperties
+  , isArray = Array.isArray, create = Object.create, defineProperties = Object.defineProperties
   , Driver, pass;
 
 require('memoizee/ext/dispose');
 require('memoizee/ext/ref-counter');
 
 pass = function (rootObj, obj, sKey, rules) {
-	var tree, current, deepPass, pass;
+	var tree, current, deepPass, pass, rule;
 	rules = mapRules(rules);
 	pass = rules.rule;
 	if (pass && pass.$deep) deepPass = pass;
 	if (!obj.owner || (obj === rootObj)) {
 		pass = rules.children && rules.children[sKey] && rules.children[sKey].rule;
+		if (pass == null) {
+			pass = rules.children && rules.children['*'] && rules.children['*'].rule;
+		}
 		if (pass) return pass;
 		if (pass === false) return false;
 		if (deepPass) return deepPass;
@@ -36,10 +43,15 @@ pass = function (rootObj, obj, sKey, rules) {
 		obj = obj.owner;
 	} while (obj.owner && (obj !== rootObj));
 	current = tree.shift();
+	rules = resolveRules.call(current, rules);
+	if (!rules) return deepPass;
 	while (true) {
-		rules = rules.children[current];
-		if (!rules) return deepPass;
-		pass = rules.rule;
+		if (isArray(rules)) {
+			rule = find.call(rules, hasRule);
+			pass = rule && rule.rule;
+		} else {
+			pass = rules.rule;
+		}
 		if (pass) {
 			if (pass.$deep) deepPass = pass;
 		} else {
@@ -47,8 +59,15 @@ pass = function (rootObj, obj, sKey, rules) {
 		}
 		sKey = tree.shift();
 		if (!sKey) return pass || deepPass;
-		if (!rules.children) return deepPass;
 		current = sKey;
+		if (isArray(rules)) {
+			rules = flatten.call(rules.map(resolveRules, current)).filter(Boolean);
+			if (!rules[0]) rules = null;
+			else if (rules.length === 1) rules = rules[0];
+		} else {
+			rules = resolveRules.call(current, rules);
+		}
+		if (!rules) return deepPass;
 	}
 };
 

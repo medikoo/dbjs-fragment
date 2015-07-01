@@ -2,7 +2,9 @@
 
 'use strict';
 
-var startsWith     = require('es5-ext/string/#/starts-with')
+var find           = require('es5-ext/array/#/find')
+  , flatten        = require('es5-ext/array/#/flatten')
+  , startsWith     = require('es5-ext/string/#/starts-with')
   , assign         = require('es5-ext/object/assign')
   , copy           = require('es5-ext/object/copy')
   , setPrototypeOf = require('es5-ext/object/set-prototype-of')
@@ -13,12 +15,14 @@ var startsWith     = require('es5-ext/string/#/starts-with')
   , Set            = require('observable-set/create-read-only')(require('observable-set/primitive'))
   , serialize      = require('dbjs/_setup/serialize/object')
   , mapRules       = require('./lib/map-rules')
+  , hasRule        = require('./lib/has-rule')
+  , resolveRules   = require('./lib/resolve-rules')
 
-  , defineProperties = Object.defineProperties
+  , isArray = Array.isArray, defineProperties = Object.defineProperties
   , Fragment, pass;
 
 pass = function (rootObj, obj, sKey, rules) {
-	var tree, current, deepPass, pass;
+	var tree, current, deepPass, pass, rule;
 	rules = mapRules(rules);
 	if (rules.rule === 2) deepPass = true;
 	if (!obj.owner || (obj === rootObj)) {
@@ -35,22 +39,31 @@ pass = function (rootObj, obj, sKey, rules) {
 		obj = obj.owner;
 	} while (obj.owner && (obj !== rootObj));
 	current = tree.shift();
+	rules = resolveRules.call(current, rules);
+	if (!rules) return deepPass;
 	while (true) {
-		rules = rules.children[current];
-		if (!rules) return deepPass;
-		pass = rules.rule;
+		if (isArray(rules)) {
+			rule = find.call(rules, hasRule);
+			pass = rule && rule.rule;
+		} else {
+			pass = rules.rule;
+		}
 		if (pass) {
 			if (pass === 2) deepPass = true;
 		} else {
 			if (pass === 0) return false;
 		}
 		sKey = tree.shift();
-		if (!sKey) {
-			if (pass === 1) return true;
-			return deepPass;
-		}
-		if (!rules.children) return deepPass;
+		if (!sKey) return (pass === 1) ? true : deepPass;
 		current = sKey;
+		if (isArray(rules)) {
+			rules = flatten.call(rules.map(resolveRules, current)).filter(Boolean);
+			if (!rules[0]) rules = null;
+			else if (rules.length === 1) rules = rules[0];
+		} else {
+			rules = resolveRules.call(current, rules);
+		}
+		if (!rules) return deepPass;
 	}
 };
 
