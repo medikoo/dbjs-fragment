@@ -46,7 +46,8 @@ pass = function (rootObj, obj, sKey, rules) {
 			if (pass === false) return false;
 		}
 		sKey = tree.shift();
-		if (!sKey || !rules.children) return pass || deepPass;
+		if (!sKey) return pass || deepPass;
+		if (!rules.children) return deepPass;
 		current = sKey;
 	}
 };
