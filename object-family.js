@@ -9,6 +9,7 @@ var assign         = require('es5-ext/object/assign')
   , ObjectFragment = require('./object')
   , MultiSet       = require('./')
   , Rules          = require('./rules')
+  , mapRules       = require('./lib/map-rules')
 
   , create = Object.create, defineProperties = Object.defineProperties
   , Driver, pass;
@@ -17,15 +18,18 @@ require('memoizee/ext/dispose');
 require('memoizee/ext/ref-counter');
 
 pass = function (rootObj, obj, sKey, rules) {
-	var tree, current, deepPass, pass = rules['/'];
+	var tree, current, deepPass, pass;
+	rules = mapRules(rules);
+	pass = rules.rule;
 	if (pass && pass.$deep) deepPass = pass;
 	if (!obj.owner || (obj === rootObj)) {
-		pass = rules[sKey];
+		pass = rules.children && rules.children[sKey] && rules.children[sKey].rule;
 		if (pass) return pass;
 		if (pass === false) return false;
 		if (deepPass) return deepPass;
 		return false;
 	}
+	if (!rules.children) return deepPass;
 	tree = [sKey];
 	do {
 		tree.unshift(obj.__sKey__);
@@ -33,15 +37,17 @@ pass = function (rootObj, obj, sKey, rules) {
 	} while (obj.owner && (obj !== rootObj));
 	current = tree.shift();
 	while (true) {
-		pass = rules[current];
+		rules = rules.children[current];
+		if (!rules) return deepPass;
+		pass = rules.rule;
 		if (pass) {
 			if (pass.$deep) deepPass = pass;
 		} else {
 			if (pass === false) return false;
 		}
 		sKey = tree.shift();
-		if (!sKey) return pass || deepPass;
-		current += '/' + sKey;
+		if (!sKey || !rules.children) return pass || deepPass;
+		current = sKey;
 	}
 };
 

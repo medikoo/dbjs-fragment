@@ -12,20 +12,23 @@ var startsWith     = require('es5-ext/string/#/starts-with')
   , allOff         = require('event-emitter/all-off')
   , Set            = require('observable-set/create-read-only')(require('observable-set/primitive'))
   , serialize      = require('dbjs/_setup/serialize/object')
+  , mapRules       = require('./lib/map-rules')
 
   , defineProperties = Object.defineProperties
   , Fragment, pass;
 
 pass = function (rootObj, obj, sKey, rules) {
 	var tree, current, deepPass, pass;
-	if (rules['/'] === 2) deepPass = true;
+	rules = mapRules(rules);
+	if (rules.rule === 2) deepPass = true;
 	if (!obj.owner || (obj === rootObj)) {
-		pass = rules[sKey];
+		pass = rules.children && rules.children[sKey] && rules.children[sKey].rule;
 		if (pass) return true;
 		if (pass === 0) return false;
 		if (deepPass) return true;
 		return false;
 	}
+	if (!rules.children) return deepPass;
 	tree = [sKey];
 	do {
 		tree.unshift(obj.__sKey__);
@@ -33,18 +36,20 @@ pass = function (rootObj, obj, sKey, rules) {
 	} while (obj.owner && (obj !== rootObj));
 	current = tree.shift();
 	while (true) {
-		pass = rules[current];
+		rules = rules.children[current];
+		if (!rules) return deepPass;
+		pass = rules.rule;
 		if (pass) {
 			if (pass === 2) deepPass = true;
 		} else {
 			if (pass === 0) return false;
 		}
 		sKey = tree.shift();
-		if (!sKey) {
+		if (!sKey || !rules.children) {
 			if (pass === 1) return true;
 			return deepPass;
 		}
-		current += '/' + sKey;
+		current = sKey;
 	}
 };
 
