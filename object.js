@@ -22,7 +22,7 @@ var find           = require('es5-ext/array/#/find')
   , Fragment, pass;
 
 pass = function (rootObj, obj, sKey, rules) {
-	var tree, current, deepPass, pass, rule;
+	var tree, current, deepPass = false, pass, rule;
 	rules = mapRules(rules);
 	if (rules.rule === 2) deepPass = true;
 	if (!obj.owner || (obj === rootObj)) {

@@ -22,7 +22,7 @@ require('memoizee/ext/dispose');
 require('memoizee/ext/ref-counter');
 
 pass = function (rootObj, obj, sKey, rules) {
-	var tree, current, deepPass, pass, rule;
+	var tree, current, deepPass = false, pass, rule;
 	rules = mapRules(rules);
 	pass = rules.rule;
 	if (pass && pass.$deep) deepPass = pass;
